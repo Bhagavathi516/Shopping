@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create New Item</title>
-</head>
-<body>
-    <a href="{% url 'item_list' %}">Home</a>
+{% extends 'shopping/base.html' %}
+{% block title %}Create New Item{% endblock %}
+
+{% block content %}
     <h1>Create New Item</h1>
     <form method="post">
-           <!-- Security token -->
+        <!-- Security token -->
         {% csrf_token %}
 
-         <!-- Using the formset -->
+        <!-- Using the formset -->
         {{ form.as_p }}
 
         <input type="submit" value="Submit">
         <!-- <button type="submit">Save</button> -->
     </form>
-</body>
-</html>
+{% endblock %}

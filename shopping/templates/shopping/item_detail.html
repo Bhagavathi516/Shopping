@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<Html>
-    <head>
-        <title>{{item.name}}</title>
-    </head>
-    <body>
-        <a href="{% url 'item_list' %}">Home</a>
-        <h1>{{ item.name }}</h1>
-        <p>Price: {{ item.price }}</p>
-        <p>Discount: {{ item.discount }}</p>
-        <p>Description: {{ item.description }}</p>
-        <a href="{% url 'item_update' item.item_id %}">Edit</a><br>
-        <a href="{% url 'item_delete' item.item_id %}">Delete</a><br>
-    </body>
-</Html>
+{% extends 'shopping/base.html' %}
+{% block title %}{{item.name}}{% endblock %}
+
+{% block content %}
+    <h1>{{ item.name }}</h1>
+    <p>Price: {{ item.price }}</p>
+    <p>Discount: {{ item.discount }}</p>
+    <p>Description: {{ item.description }}</p>
+    <a href="{% url 'item_update' item.item_id %}">Edit</a><br>
+    <a href="{% url 'item_delete' item.item_id %}">Delete</a><br>
+{% endblock %}

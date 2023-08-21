@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Shopping Cart</title>
-    </head>
-    <body>
-        <header>
-            <h1><a href="/">Shopping Cart</a></h1>
-        </header>
-        
-        {% for item in items %} 
-            <article>
-                <li><a href="{% url 'item_detail' item.item_id %}">{{ item.name }}</a></li><br/>
-                <!-- price: {{item.price}}<br/>
-                discount: {{item.discount}}<br/> -->
-                <!-- description: {{ item.description }}<br/> -->
-                <hr>
-            </article>   
-        {% endfor %}   
-        <a href="{% url 'item_create' %}">Create New Item</a> 
-</html>
+{% extends 'shopping/base.html' %}
+{% block title %}Shopping Cart{% endblock %}
+{% block content %}
+    <!-- <h1><a href="/">Shopping Cart</a></h1> -->
+    {% for item in items %} 
+        <article>
+            <li><a href="{% url 'item_detail' item.item_id %}">{{ item.name }}</a></li><br/>
+            <!-- price: {{item.price}}<br/>
+            discount: {{item.discount}}<br/> -->
+            <!-- description: {{ item.description }}<br/> -->
+            <hr>
+        </article>   
+    {% endfor %}   
+    <a href="{% url 'item_create' %}">Create New Item</a> 
+{% endblock %}
