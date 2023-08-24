@@ -1,17 +1,19 @@
 {% extends 'shopping/base.html' %}
 {% block title %}Update Item{% endblock %}
-
+{% load crispy_forms_tags %}
 {% block content %}
-    <h1>Update Item</h1>
-    <form method="post">
+    <div class="content-section">
+        <h1>Update Item</h1>
+        <form method="post">
 
-        <!-- Security token -->
-        {% csrf_token %}
+            <!-- Security token -->
+            {% csrf_token %}
 
-        <!-- Using the formset -->
-        {{ form.as_p }}
+            <!-- Using the formset -->
+            {{ form|crispy }}
 
-        <input type="submit" value="Update">
-        <!-- <button type="submit">Save</button> -->
-    </form>
+            <input type="submit" value="Update">
+            <!-- <button type="submit">Save</button> -->
+        </form>
+    </div>
 {% endblock %}

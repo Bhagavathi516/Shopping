@@ -8,8 +8,33 @@
         <div class="media-body">
             <h2 class="account-heading">{{ user.username }}</h2>
             <p class="text-secondary">{{ user.email }}</p>
+            <!-- {% if user.userprofile is not None %}
+                {% if user.userprofile.name%}
+                    <p class="text-secondary">{{ user.userprofile.name }}</p>
+                {% endif %}
+                {% if user.userprofile.place %}
+                    <p class="text-secondary">place: {{ user.userprofile.place }}</p>
+                {% endif %}
+                {% if user.userprofile.phone_number %}
+                    <p class="text-secondary">{{ user.userprofile.phone_number }}</p>
+                {% endif %}
+            {% endif %} -->
         </div>
         </div>
         <!-- FORM HERE -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Profile Info</legend>
+                    {{ u_form|crispy }}
+                    {{ profile_formset.management_form }}
+                    {% for form in profile_formset %}
+                    {{ form|crispy }}
+                    {% endfor %}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Save Profile</button>
+            </div>
+        </form>
     </div>
 {% endblock %}

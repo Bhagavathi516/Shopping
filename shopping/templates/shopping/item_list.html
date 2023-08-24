@@ -11,5 +11,7 @@
             <hr>
         </article>   
     {% endfor %}   
-    <a href="{% url 'item_create' %}">Create New Item</a> 
+    <!-- {% if user.is_superuser %}
+        <a href="{% url 'item_create' %}">Create New Item</a> 
+    {% endif %} -->
 {% endblock %}

@@ -11,10 +11,10 @@
                 <!-- Using the formset -->
                 <!-- {{ form.as_p }} -->
                 {{ user_signup_email_form|crispy }}
-                {{ user_signup_formset.management_form }}
+                <!-- {{ user_signup_formset.management_form }}
                 {% for form in user_signup_formset %}
                     {{ form|crispy }}
-                {% endfor %}
+                {% endfor %} -->
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Sign Up</button>
