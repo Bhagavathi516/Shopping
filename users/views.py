@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from .forms import UserSignupEmailForm, UserSignupProfileForm, UserSignupFormset, UserUpdationForm, UserLoginForm, ShoppingItemFormset
 # from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from users.models import UserProfile
 # from users.forms import ShoppingItemFormset
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
 from users.decorators import superuser_required
 from django.urls import reverse
 from django.http import HttpResponse
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -64,32 +68,41 @@ def user_profile_view(request):
     return render(request, 'users/profile.html', {'profile_formset': profile_formset, 'u_form':u_form})
 
 
-# def user_login_view(request):
-#     user_login_form = UserLoginForm(request.POST or None)
-#     if user_login_form.is_valid():
-#         username = user_login_form.cleaned_data['username']
-#         email = user_login_form.cleaned_data['email']
-#         password = user_login_form.cleaned_data['password']
-
-#         # Authenticate user with either username or email
-#         user = authenticate(request, username=username, email=email, password=password)
-
-#         if user is not None:
-#             login(request, user)
-#             return redirect('item_list')  # Redirect to a success page
-#         else:
-#             messages.error(request, 'Invalid login credentials')
-#             # Redirect back to the login page with the form data pre-filled
-#             return redirect('login')  # Replace with your actual URL name
-
-#     return render(request, 'users/login.html', {'form': user_login_form})
 def user_login_view(request):
-    login_form = UserLoginForm(request, data=request.POST or None)
-    if login_form.is_valid():
-        user = login_form.get_user()
-        login(request, user)
-        return redirect('item_list')
-    return render(request, 'users/login.html', {'login_form': login_form})
+    user_login_form = UserLoginForm(request.POST or None)
+    if user_login_form.is_valid():
+        username_or_email = user_login_form.cleaned_data['username_or_email']
+        # email = user_login_form.cleaned_data['email']
+        password = user_login_form.cleaned_data['password']
+
+        # Authenticate user with either username or email
+        user = None
+        if '@' in username_or_email:  # If input looks like an email
+            try:
+                # user = authenticate(request, email=username_or_email, password=password)
+                user = User.objects.get(email=username_or_email)
+
+            except User.DoesNotExist:
+                pass
+        else:  # Otherwise, treat as a username
+            user = authenticate(request, username=username_or_email, password=password)
+
+        if user is not None and user.check_password(password):
+            login(request, user)
+            return redirect('item_list')  # Redirect to a success page
+        else:
+            messages.error(request, 'Invalid login credentials')
+            # Redirect back to the login page with the form data pre-filled
+            return redirect('login')  # Replace with your actual URL name
+
+    return render(request, 'users/login.html', {'login_form': user_login_form})
+# def user_login_view(request):
+#     login_form = UserLoginForm(request, data=request.POST or None)
+#     if login_form.is_valid():
+#         user = login_form.get_user()
+#         login(request, user)
+#         return redirect('item_list')
+#     return render(request, 'users/login.html', {'login_form': login_form})
 
 # Already done this in shopping app using forms
 # def shopping_item_view(request):
@@ -106,3 +119,8 @@ def superuser_view(request):
         return redirect(reverse('admin:index'))
     else:
         return HttpResponse("This is a superuser-only view.")
+    
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'password_change.html'
+    success_url = reverse_lazy('profile')

@@ -13,6 +13,12 @@ class UserSignupEmailForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already in use.')
+        return email
+
 class UserSignupProfileForm(forms.ModelForm):
     # name = forms.CharField(max_length=200)
     # phone_number = forms.CharField(max_length=10, validators=[RegexValidator(r'^\d{10}$', message="Phone number must be 10 digits.")])
@@ -30,9 +36,10 @@ class UserUpdationForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
-class UserLoginForm(AuthenticationForm):
+class UserLoginForm(forms.Form):
     # username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
-    email = forms.EmailField(widget=forms.EmailInput)
-    # password = forms.CharField(strip=False, widget=forms.PasswordInput)
+    # email = forms.EmailField(widget=forms.EmailInput)
+    username_or_email = forms.CharField(max_length=150, label='Username or Email')
+    password = forms.CharField(strip=False, widget=forms.PasswordInput)
 
 ShoppingItemFormset = formset_factory(shoppingItemForm, extra=1)
