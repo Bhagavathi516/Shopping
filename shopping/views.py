@@ -5,6 +5,10 @@ from users.decorators import superuser_required
 from django.urls import reverse
 from django.http import HttpResponse
 
+from rest_framework import viewsets
+from rest_framework import permissions
+from shopping.serializers import shoppingItemSerializer
+
 # Create your views here. 
 @superuser_required
 def item_create(request):
@@ -50,3 +54,12 @@ def item_delete(request, id):
             return redirect('item_list')
         context['item'] = item
     return render(request, "shopping/item_delete.html", context)
+
+
+class shoppingItemViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = shoppingItemModel.objects.all()
+    serializer_class = shoppingItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
